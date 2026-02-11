@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar";
+// import Navbar from "../../components/Navbar";
 import HeroSection from "./Hero-Section";
 import FeaturesSection from "./FeaturesSection";
 import CTASection from "./CTASection";
@@ -10,7 +10,7 @@ export default function HomePage() {
     <>
       <div className="container">
         <header>
-          <Navbar />
+          
           <HeroSection />
         </header>
 

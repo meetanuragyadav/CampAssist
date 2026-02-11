@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser, loginUser } from "../api";
 import Navbar from "../components/Navbar";
-import Toast from "../components/Toast";
+import "./Login.css";
+import signupIllustration from "../assets/Login-page.png";
+
 export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,72 +55,66 @@ export default function Signup() {
   return (
     <>
       <Navbar />
-      <section className="dashboard-section">
-        <div className="cta-card" style={{ backgroundColor: "#212121", padding: "4rem", borderRadius: "20px", width: "380px", margin: "auto" }}>
-          <h2 className="hero-heading" style={{ color: "white", marginBottom: "1.5rem", textAlign: "center" }}>Sign Up</h2>
-          <form onSubmit={handleSubmit}>
-            <input
-              placeholder="Username"
-              className="auth-input"
-              style={{ width: "100%", marginBottom: "12px", padding: "10px", borderRadius: "10px" }}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              placeholder="College Email"
-              className="auth-input"
-              style={{ width: "100%", marginBottom: "12px", padding: "10px", borderRadius: "10px" }}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
 
-            <input
-              placeholder="Password"
-              className="auth-input"
-              type="password"
-              style={{ width: "100%", marginBottom: "12px", padding: "10px", borderRadius: "10px" }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+<div className="login-page register-page">
+        <div
+          className="login-bg"
+          style={{ backgroundImage: `url(${signupIllustration})` }}
+        >
+          <div className="login-overlay">
+            <h2>Create Account</h2>
 
-            <input
-              placeholder="Confirm Password"
-              className="auth-input"
-              type="password"
-              style={{ width: "100%", marginBottom: "18px", padding: "10px", borderRadius: "10px" }}
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-            />
-            {message && (
-              <div
-                style={{
-                  padding: "12px",
-                  borderRadius: "12px",
-                  marginBottom: "16px",
-                  textAlign: "center",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  backgroundColor: msgType === "success" ? "#2e7d32" : "#c62828",
-                  color: "white"
-                }}
-              >
-                {message}
-              </div>
-            )}
-            <button type="submit" className="btn role-btn" style={{ width: "100%", padding: "10px", borderRadius: "10px" }} disabled={loading}>
-              {loading ? "Creating..." : "Sign Up"}
-            </button>
-          </form>
+            <p className="subtitle">
+              Join the CampusAssist community
+            </p>
 
-          <p className="md-txt" style={{ marginTop: "1rem", textAlign: "center", color: "#ffe8cc" }}>
-            Already have an account?{" "}
-            <span onClick={() => navigate("/login")} style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}>
-              Login
-            </span>
-          </p>
+            <form onSubmit={handleSubmit}>
+              <input
+                placeholder="Username"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
 
+              <input
+                placeholder="College Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+              />
+
+              {message && (
+                <div className={`message ${msgType}`}>
+                  {message}
+                </div>
+              )}
+
+              <button type="submit" disabled={loading}>
+                {loading ? "Creating..." : "Sign Up"}
+              </button>
+            </form>
+
+            <p className="switch">
+              Already have an account?{" "}
+              <span onClick={() => navigate("/login")}>
+                Login
+              </span>
+            </p>
+          </div>
         </div>
-      </section>
+      </div>
     </>
   );
 }

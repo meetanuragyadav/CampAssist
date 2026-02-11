@@ -1,66 +1,178 @@
-import React, { useEffect, useState } from "react";
-import { getRequests, acceptRequest } from "../api";
-import Navbar from "../components/NavbarBR";
+import { useEffect, useState } from "react";
+import { getRunnerRequests, acceptRequest, completeRequest } from "../api";
+import RequestCard from "../components/RequestCard";
+import RunnerProfile from "../components/RunnerProfile";
 import "./RunnerDashboard.css";
 
 export default function RunnerDashboard() {
+  const runnerEmail = localStorage.getItem("userEmail");
+  const [available, setAvailable] = useState(true);
+
   const [requests, setRequests] = useState([]);
-  const [message, setMessage] = useState("");
-  const [msgType, setMsgType] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [activeRequest, setActiveRequest] = useState(null);
 
-  const load = async () => {
-    const res = await getRequests();
-    const open = res.data.filter(r => r.status === "OPEN");
-    setRequests(open.reverse());
-  };
-
-  const handleAccept = async (id) => {
-    setLoading(true);
-    setMessage("");
-
+  // Load all available requests
+  const loadRequests = async () => {
     try {
-      await acceptRequest(id, localStorage.getItem("userEmail"));
-      setMsgType("success");
-      setMessage("Task accepted!");
-      load();
+      const res = await getRunnerRequests();
+      setRequests(
+        (res.data || []).filter(
+          (r) => r.status !== "DELIVERED"
+        )
+      );
     } catch (err) {
-      setMsgType("error");
-      setMessage(err.response?.data?.message || "Failed");
-    } finally {
-      setLoading(false);
+      console.error("Failed to load requests", err);
     }
   };
 
-  useEffect(()=>{ load(); },[]);
+  useEffect(() => {
+    loadRequests();
+  }, []);
+
+  // Accept a request
+  const handleAccept = async (id) => {
+  // 🔥 FORCE UI MODE SWITCH FIRST
+  const accepted = requests.find(
+    (r) => Number(r.id) === Number(id)
+  );
+
+  console.log("ACCEPTED REQUEST 👉", accepted);
+
+  if (accepted) {
+    setActiveRequest(accepted); // ✅ UI switches instantly
+  }
+
+  try {
+    await acceptRequest(id, runnerEmail);
+  } catch (err) {
+    console.error("Failed to accept request", err);
+  }
+};
+
+  // Mark request as completed
+  const handleComplete = async (id) => {
+    try {
+      await completeRequest(id);
+      setActiveRequest(null);
+      loadRequests();
+    } catch (err) {
+      console.error("Failed to mark delivered", err);
+    }
+  };
+
+  const completedRequests = requests.filter(
+  r => r.status === "DELIVERED"
+);
+
+const totalEarnings = completedRequests.reduce(
+  (sum, r) => sum + (r.tip || 0),
+  0
+);
 
   return (
-    <div className="container">
-      <Navbar mode="Runner" />
-      {message && <div className={`msg-box ${msgType}`}>{message}</div>}
+    <div className="runner-control-card">
+  <div className={`availability-toggle ${available ? "on" : "off"}`}>
+    <div className="status-left">
+      <span className="status-dot" />
+      <span className="status-text">
+        {available ? "Online" : "Offline"}
+      </span>
+    </div>
 
-      <section className="orders-section">
-        <div className="orders-grid">
-          {requests.length === 0 ? (
-            <div className="cta-card no-task-card">
-              <h3>No Tasks Available</h3>
-              <p className="md-txt">Check again later!</p>
-            </div>
-          ) : (
-            requests.map(r => (
-              <div className="cta-card order-card" key={r.id}>
-                <h5 className="order-title">{r.item_name}</h5>
-                <p className="md-txt order-price">₹{r.price}</p>
-                <p className="md-txt order-reward">Reward: ₹{r.tip}</p>
 
-                <button onClick={()=>handleAccept(r.id)} className="btn order-btn" disabled={loading}>
-                  {loading ? "Accepting..." : "Accept Task"}
-                </button>
-              </div>
-            ))
-          )}
+    <button
+      className="toggle-btn"
+      onClick={() => setAvailable(!available)}
+    >
+      {available ? "Go Offline" : "Go Online"}
+    </button>
+  </div>
+
+
+
+
+      {/* LEFT PANEL */}
+      <div className="runner-left">
+        {activeRequest ? (
+          <RunnerProfile
+            request={activeRequest}
+            onComplete={handleComplete}
+          />
+        ) : (
+          <>
+            <h2 className="runner-title">Available Requests</h2>
+
+            {requests.length === 0 && (
+              <p className="runner-empty">
+                No available requests right now.
+              </p>
+            )}
+
+            {available ? (
+  requests.map(r => (
+    <RequestCard
+      key={r.id}
+      r={r}
+      isRunner
+      onAccept={handleAccept}
+    />
+  ))
+) : (
+  <p className="runner-empty">
+    You are currently offline.
+  </p>
+)}
+<div className="runner-stats-card">
+  <p className="stats-title">Today</p>
+
+<div className="stats-row">
+    <span>Deliveries</span>
+    <strong>{completedRequests.length}</strong>
+  </div>
+
+  <div className="stats-row">
+    <span>Earnings</span>
+    <strong>₹{totalEarnings}</strong>
+  </div>
+  
+</div>
+
+<div className="runner-profile-card">
+  <div className="profile-header">
+    <span className="profile-icon">👤</span>
+    <span className="profile-title">Runner Profile</span>
+  </div>
+
+  <p className="profile-name">
+    {runnerEmail}
+  </p>
+
+  <div className="profile-stats">
+    <div className="stat">
+      <span className="label">Deliveries</span>
+      <strong>{completedRequests.length}</strong>
+    </div>
+
+    <div className="stat">
+      <span className="label">Earnings</span>
+      <strong>₹{totalEarnings}</strong>
+    </div>
+  </div>
+</div>
+
+          </>
+        )}
+      </div>
+
+      {/* RIGHT PANEL */}
+      <div className="runner-right">
+        <div className="map-container">
+          {activeRequest
+            ? "Map will appear here (Azure Maps)"
+            : "Browse requests"}
         </div>
-      </section>
+      </div>
+
     </div>
   );
 }

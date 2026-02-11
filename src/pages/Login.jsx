@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api";
 import Navbar from "../components/Navbar";
+import "./Login.css";
+import loginIllustration from "../assets/Login-page.png";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,60 +38,53 @@ export default function Login() {
 
   return (
     <>
-      <Navbar />
-      <section className="dashboard-section">
-        <div className="cta-card" style={{ backgroundColor: "#212121", padding: "4rem", borderRadius: "20px", width: "380px", margin: "auto" }}>
+  <Navbar />
 
-          <h2 className="hero-heading" style={{ color: "white", marginBottom: "1.5rem", textAlign: "center" }}>Login</h2>
+  <div
+    className="login-bg login-page-only"
+style={{ backgroundImage: `url(${loginIllustration})` }}
+  >
+    <div className="login-overlay">
+      <h2>Welcome To Family</h2>
 
+      <p className="subtitle">
+        A community of hundreds of members<br />
+        to share arts and ideas
+      </p>
 
+      <form onSubmit={handleLogin}>
+        <input
+          placeholder="College Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <form onSubmit={handleLogin}>
-            <input
-              placeholder="College Email"
-              className="auth-input"
-              style={{ width: "100%", marginBottom: "12px", padding: "10px", borderRadius: "10px" }}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-            <input
-              placeholder="Password"
-              className="auth-input"
-              type="password"
-              style={{ width: "100%", marginBottom: "18px", padding: "10px", borderRadius: "10px" }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {message && (
-              <div
-                style={{
-                  padding: "12px",
-                  borderRadius: "12px",
-                  marginBottom: "16px",
-                  textAlign: "center",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  backgroundColor: msgType === "success" ? "#2e7d32" : "#c62828",
-                  color: "white"
-                }}
-              >
-                {message}
-              </div>
-            )}
-            <button type="submit" className="btn role-btn" style={{ width: "100%", padding: "10px", borderRadius: "10px" }} disabled={loading}>
-              {loading ? "Verifying..." : "Login"}
-            </button>
-          </form>
+        {message && (
+          <div className={`message ${msgType}`}>
+            {message}
+          </div>
+        )}
 
-          <p className="md-txt" style={{ marginTop: "1rem", textAlign: "center", color: "#ffe8cc" }}>
-            New here?{" "}
-            <span onClick={() => navigate("/register")} style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}>
-              Create an account
-            </span>
-          </p>
-        </div>
-      </section>
-    </>
+        <button type="submit" disabled={loading}>
+          {loading ? "Verifying..." : "Login"}
+        </button>
+      </form>
+
+      <p className="switch">
+        New here?{" "}
+        <span onClick={() => navigate("/register")}>
+          Create an account
+        </span>
+      </p>
+    </div>
+  </div>
+</>
   );
 }

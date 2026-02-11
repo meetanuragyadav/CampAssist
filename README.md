@@ -55,7 +55,7 @@ CampusAssist is a task-based assistance system that connects **Buyers** (who pos
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST`  | `/api/register` | Create new user account |
+| `POST`  | `/api/register` | Create new user account : |
 | `POST`  | `/api/login` | Authenticate user login |
 | `GET`   | `/api/users` | Fetch all users |
 | `POST`  | `/api/requests` | Buyer posts a new request |

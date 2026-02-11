@@ -537,11 +537,7 @@ span {
   max-width: 1000px;
   padding: 6rem 8rem;
 
-  background: linear-gradient(
-    135deg,
-    var(--primary-base),
-    var(--primary-shade)
-  );
+  background: linear-gradient(135deg, #1f2e3a, var(--primary-shade));
 
   border-radius: 28px;
 
@@ -573,34 +569,39 @@ span {
 }
 
 .cta-primary {
-  background-color: var(--tertiary-base);
-  color: var(--white);
+  background-color: #7c5107;        /* light orange */
+  color: #ffffff;
   padding: 1.6rem 3.6rem;
   font-size: var(--text-base);
   border-radius: 12px;
   border: none;
   cursor: pointer;
   font-weight: 700;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .cta-primary:hover {
-  background-color: var(--tertiary-shade);
+  background-color: #d97706;        /* slightly darker orange */
   transform: translateY(-3px);
 }
 
+
 .cta-secondary {
   background: transparent;
-  color: var(--white);
-  border: 2px solid rgba(255,255,255,0.4);
+  color: #ffffff;                   /* pure white */
+  border: 2px solid rgba(255, 255, 255, 0.5);
   padding: 1.6rem 3.6rem;
   font-size: var(--text-base);
   border-radius: 12px;
   cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .cta-secondary:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.7);
 }
+
 /* ================= CHAT DIALOG ================= */
 
 .chat-overlay {
@@ -996,3 +997,41 @@ span {
   font-weight: 800;
   opacity: 1;
 }
+
+.btn-primary {
+  background: #111827;
+  color: #ffffff;
+  padding: 2rem 4.2rem;        /* ↑ increased */
+  border-radius: 12px;         /* slightly rounder */
+  font-weight: 500;
+  font-size: 1.5rem;          /* ↑ from ~0.95 */
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1f2937;
+}
+
+.btn-primary-outline {
+  background: transparent;
+  color: #2563eb;
+  padding: 2rem 4.2rem;        /* SAME as primary */
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1.5rem;          /* SAME as primary */
+  border: 2px solid rgba(37, 99, 235, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-outline:hover {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: #2563eb;
+}
+.hero-btn-container {
+  display: flex;
+  gap: 3rem;     /* bigger gap for big buttons */
+  justify-content: center;
+  margin-top: 3.5rem;
+}
+
